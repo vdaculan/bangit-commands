@@ -1,4 +1,4 @@
 interface:
   display_name: "Ban Create Issue"
-  short_description: "Create GitHub issues and linked branches."
-  default_prompt: "Analyze the current work, create a well-described GitHub issue with assignee and label, then create a linked local branch."
+  short_description: "Create provider issues and branches"
+  default_prompt: "Use $ban-create-issue to create a provider-tracked issue or work item, then create a linked local branch."
