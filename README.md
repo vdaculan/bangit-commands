@@ -42,6 +42,31 @@ Current skills:
             └── SKILL.md
 ```
 
+## Install in Codex
+
+Install the skills by copying the bundled skill directories into your global Codex skills folder:
+
+```bash
+mkdir -p ~/.codex/skills
+cp -R codex/skills/ban-* ~/.codex/skills/
+```
+
+To update an existing installation from this repository, replace the installed `ban-*` skill directories with the current package contents:
+
+```bash
+mkdir -p ~/.codex/skills
+rm -rf ~/.codex/skills/ban-*
+cp -R codex/skills/ban-* ~/.codex/skills/
+```
+
+Confirm the skills were installed:
+
+```bash
+find ~/.codex/skills -maxdepth 2 -name SKILL.md | sort
+```
+
+Restart Codex or open a new thread after installing so the skill inventory reloads.
+
 ## Validation
 
 There is no build step. Use these checks before committing changes:
