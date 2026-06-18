@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ban Mobile Release"
+  short_description: "Tag-triggered mobile CI/CD releases"
+  default_prompt: "Use $ban-mobile-release to bump the mobile app version, tag the release, and trigger CI/CD."

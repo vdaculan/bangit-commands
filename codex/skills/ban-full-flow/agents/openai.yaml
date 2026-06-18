@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ban Full Flow"
+  short_description: "Create issue, commit, and PR."
+  default_prompt: "Use $ban-full-flow to create a GitHub issue, commit the current work, push the branch, and open a linked pull request."

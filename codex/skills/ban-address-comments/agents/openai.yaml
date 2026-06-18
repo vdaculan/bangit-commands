@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ban Address Comments"
+  short_description: "Resolve PR and MR review feedback"
+  default_prompt: "Use $ban-address-comments to inspect unresolved review comments, apply scoped fixes, and verify the result."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ban Fix CI"
+  short_description: "Debug and repair failing CI checks"
+  default_prompt: "Use $ban-fix-ci to inspect the failing CI run, reproduce the issue locally when safe, and fix the root cause."

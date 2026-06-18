@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ban Review"
+  short_description: "Review diffs and PRs for real risks"
+  default_prompt: "Use $ban-review to review the current diff or PR for bugs, regressions, security risks, and missing tests."

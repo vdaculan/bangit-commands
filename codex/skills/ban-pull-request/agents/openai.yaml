@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ban Pull Request"
+  short_description: "Create linked GitHub pull requests."
+  default_prompt: "Use $ban-pull-request to create a ready GitHub pull request for the current issue branch."

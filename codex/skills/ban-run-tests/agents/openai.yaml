@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ban Run Tests"
+  short_description: "Run, fix, and rerun tests until green."
+  default_prompt: "Use $ban-run-tests to run the repo test suite, stop at the first failing command, fix it, and rerun from the beginning until all tests pass."

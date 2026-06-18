@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ban Audit Repo"
+  short_description: "Audit repository structure and workflows"
+  default_prompt: "Use $ban-audit-repo to inspect this repository and report stack, commands, docs, CI, deployment, and workflow gaps."

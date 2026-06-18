@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ban Security Check"
+  short_description: "Diff-focused security and secret checks"
+  default_prompt: "Use $ban-security-check to scan the current changes for secrets, auth risks, unsafe data access, and dependency issues."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ban Create Issue"
+  short_description: "Create GitHub issues and linked branches."
+  default_prompt: "Analyze the current work, create a well-described GitHub issue with assignee and label, then create a linked local branch."

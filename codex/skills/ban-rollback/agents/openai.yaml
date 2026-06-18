@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ban Rollback"
+  short_description: "Recover from bad releases and deploys"
+  default_prompt: "Use $ban-rollback to assess a bad release or deploy and create the safest rollback plan."

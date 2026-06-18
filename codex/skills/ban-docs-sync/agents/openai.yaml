@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ban Docs Sync"
+  short_description: "Keep docs aligned with code changes"
+  default_prompt: "Use $ban-docs-sync to check whether README, AGENTS, env examples, API docs, or changelogs need updates."

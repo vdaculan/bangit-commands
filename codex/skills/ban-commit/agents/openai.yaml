@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ban Commit"
+  short_description: "Commit current git changes."
+  default_prompt: "Inspect the current git changes, generate a short concise commit message, stage the relevant changes, and create the commit."
