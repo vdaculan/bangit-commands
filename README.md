@@ -19,15 +19,19 @@ Current skills:
 | `ban-docs-sync` | Check whether docs need updates after code, config, API, command, or workflow changes. | Use after behavior, setup, command, API, or workflow changes that may affect documentation. |
 | `ban-fix-ci` | Inspect provider CI failures, reproduce them locally when safe, fix the root cause, and rerun verification. | Use when checks, builds, pipelines, or deployment previews fail. |
 | `ban-full-flow` | Run the issue-to-branch-to-PR workflow. | Use when local work should become a tracked issue, commit, branch, and pull request in one flow. |
-| `ban-marketing` | Generate concise marketing strategy and campaign copy. | Use for launch copy, social posts, ads, offers, creative briefs, or brand messaging. |
-| `ban-mobile-release` | Bump mobile app version metadata, tag the release, and trigger CI/CD distribution. | Use for tag-triggered Flutter, React Native, Android, or iOS release distribution. |
 | `ban-plan` | Turn feature requests or vague implementation goals into repo-grounded execution plans. | Use before coding when scope, phases, risks, files, and verification steps need definition. |
 | `ban-pull-request` | Create a ready provider-linked pull request or merge request for a tracked branch. | Use when committed branch work is ready for a linked PR or MR. |
-| `ban-release` | Run the repository release workflow. | Use when publishing a production release, version bump, and release tag. |
 | `ban-review` | Review local diffs or provider-hosted PRs/MRs for bugs, regressions, security risks, missing tests, and workflow issues. | Use before commit, merge, or release when you need risk-focused code review. |
 | `ban-rollback` | Assess and execute safe rollback paths for bad commits, releases, tags, migrations, or deployments. | Use when a commit, release, deployment, tag, or migration needs recovery. |
 | `ban-run-tests` | Detect the repository stack, run the right verification sequence, and fix failures until green. | Use when tests or checks need to run, fail, and be fixed until passing. |
 | `ban-security-check` | Scan diffs for secrets, auth risks, unsafe data access, dependency issues, and risky config. | Use before commit, PR, or release when security-sensitive changes need review. |
+
+Special release workflows:
+
+| Skill | Description | Special case |
+| --- | --- | --- |
+| `ban-release` | Run the repository production release workflow. | Use for Git-only production releases that bump the canonical version file, commit `chore: bump version`, create `v<version>`, and push the branch and tag. |
+| `ban-mobile-release` | Run a tag-triggered mobile app release workflow. | Use for Flutter, React Native, Android, or iOS releases where pushing the exact version tag triggers CI/CD distribution. |
 
 ## Repository layout
 
