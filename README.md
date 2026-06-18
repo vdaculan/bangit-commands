@@ -6,7 +6,7 @@
 
 ## What is included
 
-This repository stores reusable Codex skills under `codex/skills/`. Each skill lives in its own directory and exposes a `SKILL.md` entrypoint.
+This repository stores reusable Codex skills under `.codex/skills/`. Each skill lives in its own directory and exposes a `SKILL.md` entrypoint.
 
 Current skills:
 
@@ -36,7 +36,10 @@ Current skills:
 ├── AGENTS.md
 ├── LICENSE
 ├── README.md
-└── codex/
+├── scripts/
+│   ├── install.ps1
+│   └── install.sh
+└── .codex/
     └── skills/
         └── ban-*/
             └── SKILL.md
@@ -44,41 +47,50 @@ Current skills:
 
 ## Install in Codex
 
-Install the skills by copying the bundled skill directories into your global Codex skills folder:
+Install or update all skills with one command.
+
+macOS, Linux, or Windows with Git Bash/WSL:
 
 ```bash
-mkdir -p ~/.codex/skills
-cp -R codex/skills/ban-* ~/.codex/skills/
+curl -fsSL https://raw.githubusercontent.com/vdaculan/bangit-commands/main/scripts/install.sh | bash
 ```
 
-To update an existing installation from this repository, replace the installed `ban-*` skill directories with the current package contents:
+Windows PowerShell:
+
+```powershell
+irm https://raw.githubusercontent.com/vdaculan/bangit-commands/main/scripts/install.ps1 | iex
+```
+
+If you already cloned this repository, run the local installer instead.
+
+macOS, Linux, or Windows with Git Bash/WSL:
 
 ```bash
-mkdir -p ~/.codex/skills
-rm -rf ~/.codex/skills/ban-*
-cp -R codex/skills/ban-* ~/.codex/skills/
+./scripts/install.sh
 ```
 
-Confirm the skills were installed:
+Windows PowerShell:
 
-```bash
-find ~/.codex/skills -maxdepth 2 -name SKILL.md | sort
+```powershell
+.\scripts\install.ps1
 ```
 
-Restart Codex or open a new thread after installing so the skill inventory reloads.
+The installer writes the bundled `ban-*` skills to `~/.codex/skills`. Open a new Codex thread after installing so the skill inventory reloads.
 
 ## Validation
 
 There is no build step. Use these checks before committing changes:
 
 ```bash
-find codex/skills -maxdepth 2 -name SKILL.md | sort
+find .codex/skills -maxdepth 2 -name SKILL.md | sort
+bash -n scripts/install.sh
+pwsh -NoProfile -Command "[scriptblock]::Create((Get-Content -Raw scripts/install.ps1)) | Out-Null"
 git diff --check
 git status --short
 ```
 
 ## Contributing
 
-Add new skills as `codex/skills/<skill-name>/SKILL.md` using lowercase kebab-case names. Keep each skill focused on one workflow, include clear trigger language in the front matter, and document commands in executable order.
+Add new skills as `.codex/skills/<skill-name>/SKILL.md` using lowercase kebab-case names. Keep each skill focused on one workflow, include clear trigger language in the front matter, and document commands in executable order.
 
 See `AGENTS.md` for contributor and agent-specific guidelines.

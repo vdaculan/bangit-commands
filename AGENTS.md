@@ -2,20 +2,22 @@
 
 ## Project Structure & Module Organization
 
-This repository packages reusable Codex workflow skills. The root contains project-level documentation and licensing files:
+This repository packages reusable Codex workflow skills. The root contains project-level documentation, licensing files, and install tooling:
 
 - `README.md` summarizes the purpose of the repository.
 - `LICENSE` contains the project license.
-- `codex/skills/<skill-name>/SKILL.md` contains each skill definition.
+- `scripts/install.sh` installs or updates the packaged skills from Bash-compatible shells.
+- `scripts/install.ps1` installs or updates the packaged skills from PowerShell.
+- `.codex/skills/<skill-name>/SKILL.md` contains each skill definition.
 
-Each skill should live in its own directory under `codex/skills/` and include a `SKILL.md` file with YAML front matter followed by Markdown instructions. Current skill names follow the `ban-*` prefix, for example `codex/skills/ban-commit/SKILL.md`.
+Each skill should live in its own directory under `.codex/skills/` and include a `SKILL.md` file with YAML front matter followed by Markdown instructions. Current skill names follow the `ban-*` prefix, for example `.codex/skills/ban-commit/SKILL.md`.
 
 ## Build, Test, and Development Commands
 
 There is no compiled build step for this repository. Use shell checks to validate structure and review changes:
 
 ```bash
-find codex/skills -maxdepth 2 -name SKILL.md | sort
+find .codex/skills -maxdepth 2 -name SKILL.md | sort
 ```
 
 Lists all skill entrypoints and confirms each skill has a `SKILL.md`.
@@ -25,6 +27,18 @@ git diff --check
 ```
 
 Detects whitespace errors before committing.
+
+```bash
+bash -n scripts/install.sh
+```
+
+Checks the Bash installer script for shell syntax errors.
+
+```bash
+pwsh -NoProfile -Command "[scriptblock]::Create((Get-Content -Raw scripts/install.ps1)) | Out-Null"
+```
+
+Checks the PowerShell installer script for syntax errors when PowerShell is available.
 
 ```bash
 git status --short
@@ -40,7 +54,7 @@ Skill directories should use lowercase kebab case and match the skill name, such
 
 ## Testing Guidelines
 
-No automated test framework is configured. Validate changes by checking Markdown readability, confirming the expected skill paths exist, and running `git diff --check`. When changing a skill workflow, manually review command order and safety notes so instructions remain executable in a real repository.
+No automated test framework is configured. Validate changes by checking Markdown readability, confirming the expected skill paths exist, running `bash -n scripts/install.sh`, parsing `scripts/install.ps1` with PowerShell when available, and running `git diff --check`. When changing a skill workflow, manually review command order and safety notes so instructions remain executable in a real repository.
 
 ## Commit & Pull Request Guidelines
 
