@@ -22,7 +22,7 @@ Current skills:
 | `ban-marketing` | Generate concise marketing strategy and campaign copy. | Use for launch copy, social posts, ads, offers, creative briefs, or brand messaging. |
 | `ban-mobile-release` | Bump mobile app version metadata, tag the release, and trigger CI/CD distribution. | Use for tag-triggered Flutter, React Native, Android, or iOS release distribution. |
 | `ban-plan` | Turn feature requests or vague implementation goals into repo-grounded execution plans. | Use before coding when scope, phases, risks, files, and verification steps need definition. |
-| `ban-pull-request` | Create a ready GitHub pull request for an issue branch. | Use when committed branch work is ready for a linked PR. |
+| `ban-pull-request` | Create a ready provider-linked pull request or merge request for a tracked branch. | Use when committed branch work is ready for a linked PR or MR. |
 | `ban-release` | Run the repository release workflow. | Use when publishing a production release, version bump, and release tag. |
 | `ban-review` | Review local diffs or provider-hosted PRs/MRs for bugs, regressions, security risks, missing tests, and workflow issues. | Use before commit, merge, or release when you need risk-focused code review. |
 | `ban-rollback` | Assess and execute safe rollback paths for bad commits, releases, tags, migrations, or deployments. | Use when a commit, release, deployment, tag, or migration needs recovery. |
