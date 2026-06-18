@@ -1,4 +1,4 @@
 interface:
   display_name: "Ban Mobile Release"
-  short_description: "Tag-triggered mobile CI/CD releases"
-  default_prompt: "Use $ban-mobile-release to bump the mobile app version, tag the release, and trigger CI/CD."
+  short_description: "Provider-neutral mobile Git releases"
+  default_prompt: "Use $ban-mobile-release to verify main is checked out and clean, find and bump the mobile version file, commit exactly chore: bump version, push main to origin, tag HEAD as v<version>, and push that exact tag."

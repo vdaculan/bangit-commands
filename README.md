@@ -26,12 +26,11 @@ Current skills:
 | `ban-run-tests` | Detect the repository stack, run the right verification sequence, and fix failures until green. | Use when tests or checks need to run, fail, and be fixed until passing. |
 | `ban-security-check` | Scan diffs for secrets, auth risks, unsafe data access, dependency issues, and risky config. | Use before commit, PR, or release when security-sensitive changes need review. |
 
-Special release workflows:
+Special release workflow:
 
 | Skill | Description | Special case |
 | --- | --- | --- |
-| `ban-release` | Run the repository production release workflow. | Use for Git-only production releases that bump the canonical version file, commit `chore: bump version`, create `v<version>`, and push the branch and tag. |
-| `ban-mobile-release` | Run a tag-triggered mobile app release workflow. | Use for Flutter, React Native, Android, or iOS releases where pushing the exact version tag triggers CI/CD distribution. |
+| `ban-mobile-release` | Run the provider-neutral mobile Git release workflow. | Use for Flutter, React Native, Android, or iOS releases that must start from clean `main`, bump the canonical version file, commit `chore: bump version`, push `main`, tag the commit as `v<version>`, and push that exact tag to `origin`. |
 
 ## Repository layout
 

@@ -78,7 +78,7 @@ git diff
 
 For merge commits, inspect parent order first and use `git revert -m <parent> <merge-commit>` only when the mainline parent is known.
 
-For a new patch release, follow `$ban-release` or `$ban-mobile-release` rules after the fix is committed.
+For a new mobile patch release, follow `$ban-mobile-release` rules after the fix is committed.
 
 For provider rollback, show the exact provider action and target deployment/version before executing it.
 

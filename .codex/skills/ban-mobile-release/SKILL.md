@@ -1,17 +1,17 @@
 ---
 name: ban-mobile-release
-description: Run a mobile app release workflow where a version bump and exact Git tag push trigger CI/CD distribution. Use when the user asks for ban-mobile-release, a mobile release, Flutter release, React Native release, Android or iOS release tagging, Codemagic or other CI/CD tag-triggered distribution, Firebase App Distribution release, TestFlight release trigger, Play internal testing trigger, or a release that should be started by pushing a version tag.
+description: Run the mobile release Git flow from main by verifying a clean worktree, finding and bumping the canonical version file, committing exactly `chore: bump version`, pushing main to origin, tagging the commit as `v<version>`, and pushing the exact tag. Use when the user asks for ban-mobile-release, a mobile release, Flutter release, React Native release, Android or iOS release tagging, or a provider-neutral Git tag release.
 ---
 
 # Ban Mobile Release
 
-Run a tag-triggered mobile release. This skill is Git-first: validate the mobile repository, bump the canonical version file, commit only the release metadata, create the exact release tag, push the release branch, then push the tag that triggers CI/CD.
+Run the provider-neutral mobile release Git flow. Validate that the checked-out branch is `main`, verify the worktree is clean, find the canonical version file, bump it, commit exactly `chore: bump version`, push `main` to `origin`, tag the pushed commit with the same bumped version, and push that exact tag.
 
-Do not build binaries, upload artifacts, submit store releases, or edit signing assets locally unless the user explicitly asks. The tag push is the release trigger.
+This skill works across GitHub, GitLab, Bitbucket, Azure DevOps, and generic Git remotes because it uses only normal Git operations against `origin`. Do not build binaries, upload artifacts, submit store releases, edit signing assets, open PRs, or call provider-specific APIs unless the user explicitly asks.
 
 ## Workflow
 
-1. Confirm repository and release context:
+1. Confirm repository, branch, and remote context:
 
 ```bash
 pwd
@@ -19,9 +19,30 @@ git rev-parse --show-toplevel
 git status --short --branch
 git branch --show-current
 git remote -v
+git remote get-url origin
 ```
 
-2. Detect the mobile stack and version source from repository files:
+If the current directory is not a Git repository or `origin` is not configured, stop and report the blocker.
+
+2. Confirm the checked-out branch is exactly `main`.
+
+```bash
+git branch --show-current
+```
+
+If the branch is not `main`, stop immediately. Do not switch branches, edit files, stage, commit, tag, or push.
+
+3. Confirm `main` is clean before any release edit.
+
+```bash
+git status --short
+git diff --stat
+git diff HEAD
+```
+
+If there are modified, staged, deleted, or untracked files, stop immediately and report the blocking paths. Do not change anything when the worktree is dirty.
+
+4. Find the canonical mobile version file.
 
 ```bash
 find . -maxdepth 5 \( -name 'pubspec.yaml' -o -name 'package.json' -o -name 'app.json' -o -name 'app.config.*' -o -name 'eas.json' -o -name 'build.gradle' -o -name 'build.gradle.kts' -o -name '*.xcodeproj' -o -name 'project.pbxproj' -o -name 'codemagic.yaml' -o -name 'bitrise.yml' -o -path './fastlane/*' -o -name 'firebase.json' \) -print
@@ -35,36 +56,14 @@ Choose one canonical version source:
 - Native iOS: project `MARKETING_VERSION` and `CURRENT_PROJECT_VERSION` in `project.pbxproj`, or repo-documented release tooling.
 - Multi-platform repos: stop if version sources disagree and repo docs do not identify the canonical source.
 
-3. Detect the CI/CD tag trigger.
+Extract:
 
-Inspect provider and pipeline config before tagging:
+- project or app name
+- platform, such as Flutter, React Native, Expo, Android, iOS, or mixed
+- current version
+- exact file that owns the version bump
 
-```bash
-find .github .gitlab .circleci .codemagic .bitrise .azure-pipelines .buildkite .vercel .netlify -maxdepth 4 -type f 2>/dev/null
-find . -maxdepth 3 -type f \( -name 'codemagic.yaml' -o -name 'bitrise.yml' -o -name '.gitlab-ci.yml' -o -name 'azure-pipelines*.yml' -o -name 'bitbucket-pipelines.yml' -o -name 'Jenkinsfile' \) -print
-```
-
-Look for tag filters such as `v*`, `refs/tags/*`, `tags:`, `on.push.tags`, Codemagic tag events, Bitrise tag triggers, or provider-specific release workflows. If no tag trigger is visible, stop before tagging unless the user explicitly confirms the tag is still the release trigger.
-
-4. Enforce release preconditions.
-
-Require:
-
-- Current branch is the repository release branch, usually `main` unless repo docs or `origin/HEAD` say otherwise.
-- Worktree is clean before the version bump.
-- Version source is clear and non-empty.
-- CI/CD tag trigger is confirmed or explicitly accepted by the user.
-- Target tag does not already exist locally or remotely.
-
-Use:
-
-```bash
-git symbolic-ref refs/remotes/origin/HEAD
-git tag --list "v<version>"
-git ls-remote --tags origin "refs/tags/v<version>"
-```
-
-If any precondition fails, stop without editing, committing, tagging, or pushing.
+If the canonical version file or current version cannot be identified, stop and report the candidates found.
 
 5. Determine the next version.
 
@@ -82,11 +81,20 @@ The release tag must be exactly:
 v<version>
 ```
 
-6. Edit only the canonical version file, unless repo guidance clearly requires coupled mobile version files.
+6. Verify the target tag does not already exist locally or remotely.
+
+```bash
+git tag --list "v<version>"
+git ls-remote --tags origin "refs/tags/v<version>"
+```
+
+If the tag already exists locally or remotely, stop and report that the target version is already tagged. Do not edit, commit, tag, or push.
+
+7. Edit only the canonical version file.
 
 For Flutter, edit only `pubspec.yaml` unless the repository explicitly documents another coupled file. Re-read the file after editing and confirm the new value matches `<version>`.
 
-7. Stage and verify only the release metadata:
+8. Stage and verify only the version bump:
 
 ```bash
 git add <version-file>
@@ -94,27 +102,36 @@ git diff --cached --stat
 git diff --cached
 ```
 
-If unrelated files are staged or the diff includes non-release changes, stop and correct the staging before committing.
+If unrelated files are staged or the diff includes non-version changes, stop and correct the staging before committing.
 
-8. Create the release commit:
+9. Create the release commit with the exact message:
 
 ```bash
 git commit -m "chore: bump version"
 ```
 
-Do not amend prior commits and do not use a different message unless the repository explicitly requires it.
+Do not amend prior commits and do not use a different message.
 
-9. Create and push the tag that triggers CI/CD:
+10. Push `main` to `origin` before tagging:
+
+```bash
+git push origin main
+```
+
+If the push fails, stop and report the remote or credential error. Do not create or push a tag after a failed branch push.
+
+11. Tag the committed release version and push only that tag.
+
+Before tagging, re-read the version file and confirm the committed version is exactly `<version>`. Then tag `HEAD`:
 
 ```bash
 git tag "v<version>"
-git push origin <release-branch>
 git push origin "v<version>"
 ```
 
-Push only the release branch and exact tag. Do not use `git push --tags`.
+Do not use `git push --tags`.
 
-10. Verify local Git state and trigger evidence:
+12. Verify final Git state:
 
 ```bash
 git status --short --branch
@@ -122,16 +139,9 @@ git tag --points-at HEAD
 git rev-parse --short HEAD
 ```
 
-If provider tooling is available, check that CI/CD noticed the tag:
+Confirm `HEAD` has `v<version>`, the worktree is clean, and `main` is no longer ahead of `origin/main`.
 
-- GitHub Actions: `gh run list --branch "v<version>"` or inspect tag-triggered workflow runs.
-- GitLab CI: `glab pipeline list --ref "v<version>"`.
-- Codemagic: inspect `codemagic.yaml` and provider dashboard/logs when available.
-- Bitrise: inspect tag-triggered builds when CLI/API is available.
-
-Do not wait indefinitely for mobile builds to finish unless the user explicitly asks to monitor.
-
-11. Report the release in this shape:
+13. Report the release in this shape:
 
 ```text
 Project: <project-name>
@@ -139,28 +149,33 @@ Platform: <Flutter | React Native | Expo | Android | iOS | mixed>
 Version: <version>
 Tag: v<version>
 Commit: <short-hash>
-Trigger: pushed tag v<version> to origin for CI/CD
-CI/CD: <detected provider or "not verified from CLI">
-Reminder: <project-name> <version> mobile release was triggered by tag v<version>.
+Push: main and tag v<version> pushed to origin
+Reminder: <project-name> <version> mobile release was published with tag v<version>.
 ```
 
 ## Mobile CI/CD Notes
 
-For Codemagic, confirm `codemagic.yaml` has the expected workflow and tag trigger. If iOS signing fails with missing profiles, certificates, Apple Developer enrollment, bundle identifier mismatch, or Ad Hoc/TestFlight signing errors, report it as a signing/provider blocker instead of trying unrelated repo changes.
+This skill only performs the Git release: version bump, commit, branch push, tag, and tag push. Any CI/CD provider that reacts to tags should be handled by that provider after the tag reaches `origin`.
 
-For Firebase App Distribution, TestFlight, or Play testing tracks, distinguish "tag pushed and CI/CD started" from "artifact distributed." The release is only fully distributed after the provider build and upload steps pass.
+For Codemagic, Bitrise, Fastlane, EAS, Firebase App Distribution, TestFlight, or Play tracks, distinguish "tag pushed" from "artifact distributed." The release is only fully distributed after the provider build and upload steps pass.
 
-For repos that use Fastlane, EAS, Bitrise, or provider-specific release scripts, inspect those configs before deciding which version files must be changed.
+If a mobile build later fails because of signing, provisioning, store credentials, Apple Developer enrollment, bundle identifier mismatch, App Store Connect keys, Play Console keys, or Firebase credentials, report it as a provider-side blocker instead of changing unrelated code.
+
+For repos that use Fastlane, EAS, Bitrise, or provider-specific release scripts, inspect those configs only to identify the canonical version file when the normal version source is ambiguous.
 
 ## Safety
 
-Do not run this workflow from a dirty worktree.
+Do not run this workflow from any branch other than `main`.
+
+Do not change anything when the worktree is dirty.
 
 Do not tag a commit whose version file does not exactly match the tag.
 
 Do not create a tag that already exists locally or remotely.
 
 Do not push all tags.
+
+Do not create a tag if `git push origin main` fails.
 
 Do not edit signing credentials, provisioning profiles, keystores, App Store Connect keys, Play Console keys, or Firebase service files unless explicitly requested.
 

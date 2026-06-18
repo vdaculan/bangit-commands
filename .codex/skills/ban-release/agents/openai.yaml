@@ -1,4 +1,0 @@
-interface:
-  display_name: "Ban Release"
-  short_description: "Commit a version bump and publish the release tag."
-  default_prompt: "Use $ban-release to detect the repository's release branch and canonical version file, validate a clean release state, and release from the version currently in that file. For Flutter repos, treat pubspec.yaml as the source of truth, bump from the version in pubspec.yaml, commit the version bump as chore: bump version, create the matching tag v<version>, push the release branch, push the exact tag, and report the project, package, version, commit, and tag details."
