@@ -32,6 +32,8 @@ Special release workflow:
 | --- | --- | --- |
 | `ban-mobile-release` | Run the provider-neutral mobile Git release workflow. | Use for Flutter, React Native, Android, or iOS releases that must start from clean `main`, bump the canonical version file, commit `chore: bump version`, push `main`, tag the commit as `v<version>`, and push that exact tag to `origin`. |
 
+Prerequisite: the repository must already have CI/CD implemented and configured to accept version tag pushes such as `v<version>` as the release trigger. The skill only performs the Git release steps; the provider pipeline owns the build, upload, and distribution work after the tag reaches `origin`.
+
 ## Repository layout
 
 ```text
