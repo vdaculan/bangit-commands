@@ -7,6 +7,8 @@ description: Detect the repository stack, run the appropriate full verification 
 
 Run the repository's appropriate full verification sequence, stop after the first failing command completes, fix the failure, then restart the selected sequence from the beginning. Only report success after the full sequence passes in order.
 
+If the user or another skill supplies explicit verification constraints, honor them exactly. Common constraints include verification-only mode, a fixed command sequence, a maximum scope, or no source edits. In verification-only mode, run the selected sequence, stop at the first failing command, report the failure surface, and do not modify files.
+
 ## Workflow
 
 1. Confirm the repository context:
@@ -33,6 +35,7 @@ Prefer explicit project scripts and config over generic defaults. Use package-ma
 4. Run commands in order. If a command fails:
 
 - Stop the sequence after that command completes.
+- If verification-only mode was requested, report the failing command and exact failure surface without editing files.
 - Diagnose the failing code path.
 - Make the needed fix.
 - Use focused verification while iterating if helpful.
@@ -193,6 +196,8 @@ If a command fails because dependencies are missing, install nothing unless the 
 Do not skip a failing command and continue to later commands.
 
 Do not declare success from a partial pass or from targeted verification alone.
+
+When verification-only mode is requested by the user or a calling skill, do not edit files, install dependencies, run migrations, or attempt fixes. Stop at the first failing command and return the blocker.
 
 Prefer targeted test reruns while fixing, but always finish with the full sequence.
 

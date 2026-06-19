@@ -20,7 +20,9 @@ git branch --show-current
 
 2. Identify the commit intent from the diff, not from assumptions.
 
-3. Generate a concise conventional commit message:
+If the user or another skill supplies explicit commit constraints, honor them exactly. Common constraints include an exact commit message, an allowlist of paths to stage, a required branch to push, or a requirement to omit a commit body. Do not replace explicit constraints with generated defaults.
+
+3. Generate a concise conventional commit message unless an exact message was supplied:
 
 ```text
 <type>: <summary>
@@ -51,6 +53,8 @@ Good examples:
 - Subject: `style: soften theme font weights`
   Body: `Adjust headings and labels to reduce visual heaviness. Preserve the existing spacing and color palette.`
 
+If an exact commit message was supplied, use that message exactly and skip the generated-message rules above.
+
 4. Stage only the changes that belong to the requested commit:
 
 ```bash
@@ -62,6 +66,8 @@ If the user says to commit current/all changes, stage all modified, added, and d
 ```bash
 git add -A
 ```
+
+If the user or another skill supplied a path allowlist, stage only those paths even when other changes exist.
 
 5. Verify the staged diff before committing:
 
@@ -76,7 +82,13 @@ git diff --cached
 git commit -m "<subject>" -m "<body>"
 ```
 
-7. Push the current branch to `origin` after the commit succeeds. Use the branch name from the earlier `git branch --show-current` result:
+For an exact one-line message supplied by the user or another skill, use:
+
+```bash
+git commit -m "<exact-message>"
+```
+
+7. Push the current branch to `origin` after the commit succeeds. Use the branch name from the earlier `git branch --show-current` result unless an explicit required branch was supplied:
 
 ```bash
 git push -u origin <branch>
@@ -97,3 +109,5 @@ Do not include unrelated files if the user requested a specific subset.
 If the worktree contains unrelated changes and the user did not say to commit all current changes, ask before staging.
 
 If there are no changes to commit, report that clearly and do not create an empty commit unless explicitly requested.
+
+When called by another skill, return control after the commit and branch push. Do not perform extra workflow-specific actions such as tagging, opening PRs/MRs, or creating releases unless that calling skill explicitly owns those steps.

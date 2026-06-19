@@ -163,12 +163,13 @@ gh pr create \
   --head <branch> \
   --title "<pr-title>" \
   --body "<pr-body>" \
-  --assignee vdaculan \
   --label "<issue-label-1>" \
   --label "<issue-label-2>"
 ```
 
 Include one `--label "<label-name>"` flag per linked issue label. If the linked issue has no labels, omit the `--label` flags.
+
+Add assignees or reviewers only when the user requested them or the repository has an established convention. Do not assume the current user, repository owner, or skill author should be assigned.
 
 ### GitLab
 
@@ -178,12 +179,11 @@ glab mr create \
   --source-branch <branch> \
   --title "<mr-title>" \
   --description "<mr-body>" \
-  --assignee "vdaculan" \
   --label "<issue-label-1>" \
   --label "<issue-label-2>"
 ```
 
-If GitLab labels or assignee lookup fail because the project does not support them or the identity differs, retry without the unsupported flags and report what was skipped.
+Add assignees or reviewers only when the user requested them or the repository has an established convention. If GitLab labels, assignees, or reviewers fail because the project does not support them or the identity differs, retry without the unsupported flags and report what was skipped.
 
 ### Bitbucket
 
@@ -200,7 +200,7 @@ az repos pr create \
   --work-items <work-item-id>
 ```
 
-Add reviewers only when the user requested reviewers or the repository has an established convention. Do not assume `vdaculan` is a valid Azure DevOps identity.
+Add reviewers only when the user requested reviewers or the repository has an established convention. Do not assume any personal username is a valid Azure DevOps identity.
 
 ### Generic Git
 
@@ -225,3 +225,5 @@ Do not amend commits, reset, restore, discard, or revert changes.
 Do not manually reimplement `ban-commit` behavior. If changes need committing, invoke or follow `$ban-commit`.
 
 Do not assume GitHub labels, assignees, closing keywords, or issue numbers work on other providers.
+
+Do not hard-code personal usernames, reviewers, or assignees in generated PR/MR commands. Keep the workflow usable for any repository owner or contributor.
